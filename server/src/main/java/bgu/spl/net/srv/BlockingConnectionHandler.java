@@ -36,16 +36,11 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
             protocol.start(-1, connections, this);
 
             while (!protocol.shouldTerminate() && (read = in.read()) >= 0) {
-                // System.out.println("Received: " + read);
                 T nextMessage = encdec.decodeNextByte((byte) read);
                 if (nextMessage != null) {
-                    // System.out.println("Received message: " + Arrays.toString((byte[])
-                    // nextMessage));
                     T response = protocol.process(nextMessage);
                     if (response != null) {
-                        // System.out.println("Sending response: " + Arrays.toString((byte[])
-                        // response));
-                        synchronized (socketLock) {
+                        synchronized (socketLock) { // also can be send from the connections "sendAll" method
                             out.write(encdec.encode(response));
                             out.flush();
                         }
@@ -65,13 +60,12 @@ public class BlockingConnectionHandler<T> implements Runnable, ConnectionHandler
     }
 
     @Override
-    public void send(T msg) {
+    public void send(T msg) { // called from the connections "sendAll" method
         synchronized (socketLock) {
             try {
                 out.write(encdec.encode(msg));
                 out.flush();
             } catch (IOException e) {
-                // Handle IOException if necessary
             }
         }
     }

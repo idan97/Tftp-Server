@@ -27,7 +27,8 @@ public class TftpProtocol implements BidiMessagingProtocol<byte[]> {
     private final int blockSize = 512;
     private short blockNumber = 1;
     private int offset = 0;
-    private static String folderPath = "Files" + File.separator;
+    //private static String folderPath = "Files" + File.separator;
+    private static String folderPath = getFolderPath();
     private static Map<String, Object> files = getAllFiles();
     
 
@@ -45,11 +46,15 @@ public class TftpProtocol implements BidiMessagingProtocol<byte[]> {
         File[] filesList = directory.listFiles();
         if (filesList != null) {
             for (File file : filesList) {
-                files.put(file.getName(), new Object());
+                // Skip hidden files
+                if (!file.isHidden()) {
+                    files.put(file.getName(), new Object());
+                }
             }
         }
         return files;
     }
+    
 
     @Override
     public byte[] process(byte[] message) {
@@ -309,11 +314,6 @@ public class TftpProtocol implements BidiMessagingProtocol<byte[]> {
         }
     }
 
-    private static String getFolderPath() {
-        String projectPath = System.getProperty("user.dir"); // Get the current working directory of the server
-        return projectPath + File.separator + "Server" + File.separator + "Files" + File.separator;
-    }
-
     @Override
     public boolean shouldTerminate() {
         return shouldTerminate;
@@ -322,5 +322,10 @@ public class TftpProtocol implements BidiMessagingProtocol<byte[]> {
     @Override
     public int getConnectionId() {
         return connectionId;
+    }
+
+    private static String getFolderPath() {
+        String projectPath = System.getProperty("user.dir"); // Get the current working directory of the server
+        return projectPath + File.separator + "server" + File.separator + "Files" + File.separator;
     }
 }

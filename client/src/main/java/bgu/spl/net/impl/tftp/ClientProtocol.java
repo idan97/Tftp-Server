@@ -24,7 +24,8 @@ public class ClientProtocol implements MessagingProtocol<byte[]> {
     protected boolean wait = false;
     private boolean lastPacket = false;
     private KeyboardHandler keyboardHandler = null;
-    private static String folderPath = "." + File.separator;
+    //private static String folderPath = "." + File.separator;
+    private static String folderPath = getFolderPath();
     private static Map<String, Object> files = getAllFiles();
 
     @Override

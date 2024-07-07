@@ -4,8 +4,6 @@ import bgu.spl.net.srv.*;
 
 public class TftpServer<T> {
     private static Connections<byte[]> connections = new ConnectionsImpl<>(); //one shared object
-    private static int connectionId = 0;
-    private static final Object idLock = new Object();
     
     public static <T> Connections<T> getConnections() {
         return (Connections<T>) connections;

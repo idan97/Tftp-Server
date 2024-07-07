@@ -6,7 +6,7 @@ import java.util.Arrays;
 public class TftpEncoderDecoder implements MessageEncoderDecoder<byte[]> {
     private byte[] bytes = new byte[1 << 10]; // initial capacity for received bytes
     private int len = 0;
-    private short packetSize = 0;
+    private short packetSize = 0; // for DATA packets the number of bytes in the packet
     TftpOpcode opVal = TftpOpcode.NONE;
 
     @Override
